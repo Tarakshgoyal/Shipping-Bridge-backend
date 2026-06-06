@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: shipping_bridge
+      POSTGRES_USER: shipping
+      POSTGRES_PASSWORD: shipping
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/shipping_bridge
+      DB_USERNAME: shipping
+      DB_PASSWORD: shipping
+      LOGISTICS_PROVIDER: mock
+      EMAIL_PROVIDER: smtp
+      EMAIL_FROM: taraksh9a33@gmail.com
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-data:
