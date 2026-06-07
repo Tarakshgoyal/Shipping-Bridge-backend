@@ -69,6 +69,23 @@ DB_USERNAME=shipping
 DB_PASSWORD=shipping
 ```
 
+On Render, attach a PostgreSQL database and expose its internal connection string as `DATABASE_URL`. The app converts Render's `postgres://...` URL into the JDBC URL Spring Boot needs at startup.
+
+Neon works the same way. Put the Neon connection string in `.env` as `DATABASE_URL`; the app will convert `postgresql://...` into a JDBC URL and normalize Neon's `channel_binding` parameter for the PostgreSQL JDBC driver.
+
+For Render deployments, configure these environment variables on the Render service itself:
+
+```bash
+DATABASE_URL=postgresql://...
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=taraksh9a33@gmail.com
+SMTP_PASS=<gmail-app-password>
+EMAIL_VERIFICATION_BASE_URL=https://<your-backend-host>/api/auth/verify
+```
+
+Render does not read your local `.env` file unless you add those values in the Render dashboard.
+
 ## Caching
 
 The service uses Spring caching with an in-memory cache manager. Repeated calls for the same shipping-rate request or order lookup are served from cache. Order creation and tracking refresh update the cached order data so later reads do not need to hit the database for unchanged details.

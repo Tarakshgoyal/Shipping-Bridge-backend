@@ -15,9 +15,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DB_URL: jdbc:postgresql://postgres:5432/shipping_bridge
-      DB_USERNAME: shipping
-      DB_PASSWORD: shipping
+      DATABASE_URL: ${DATABASE_URL:-postgresql://shipping:shipping@postgres:5432/shipping_bridge}
       LOGISTICS_PROVIDER: mock
       EMAIL_PROVIDER: smtp
       EMAIL_FROM: taraksh9a33@gmail.com
