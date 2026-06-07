@@ -135,7 +135,9 @@ class OrderApiIntegrationTest {
 								"""))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.username", is("new_user")))
-				.andExpect(jsonPath("$.status", is("PENDING_EMAIL_VERIFICATION")));
+				.andExpect(jsonPath("$.status", is("PENDING_EMAIL_VERIFICATION")))
+				.andExpect(jsonPath("$.verificationLink", startsWith("http://localhost:8080/api/auth/verify?token=")))
+				.andExpect(jsonPath("$.emailDeliveryStatus", is("SENT")));
 
 		String token = tokenRepository.findAll().stream()
 				.filter(candidate -> candidate.getUserAccount().getEmail().equals("new_user@example.com"))

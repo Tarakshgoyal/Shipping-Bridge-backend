@@ -23,7 +23,7 @@ Register a user with `POST /api/auth/register`:
 }
 ```
 
-The service sends a verification email through Gmail SMTP from `taraksh9a33@gmail.com`. Configure:
+The service attempts to send a verification email through Gmail SMTP from `taraksh9a33@gmail.com`. Configure:
 
 ```bash
 SMTP_HOST=smtp.gmail.com
@@ -42,6 +42,8 @@ SMTP_PORT=587
 SMTP_USER=taraksh9a33@gmail.com
 SMTP_PASS=your_gmail_app_password
 ```
+
+The registration response includes `verificationLink` and `emailDeliveryStatus`. If a host blocks outbound SMTP and `emailDeliveryStatus` is `FAILED`, the account is still created and can be verified by opening the returned `verificationLink`.
 
 After the user clicks the verification link, call protected `/api/**` endpoints with HTTP Basic auth using the verified username and password.
 
@@ -85,6 +87,8 @@ EMAIL_VERIFICATION_BASE_URL=https://<your-backend-host>/api/auth/verify
 ```
 
 Render does not read your local `.env` file unless you add those values in the Render dashboard.
+
+Some hosts restrict direct SMTP traffic. If Render cannot connect to Gmail on port `587`, registration still returns the verification link so accounts can be verified manually. For production email delivery on restricted hosts, prefer an HTTP-based email API or the Gmail API over raw SMTP.
 
 ## Caching
 

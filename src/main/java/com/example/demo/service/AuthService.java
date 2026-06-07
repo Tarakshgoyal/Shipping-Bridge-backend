@@ -17,6 +17,8 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
 	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
 	private final UserAccountRepository userAccountRepository;
@@ -69,8 +72,21 @@ public class AuthService {
 		verificationToken.setExpiresAt(Instant.now().plus(24, ChronoUnit.HOURS));
 		tokenRepository.save(verificationToken);
 
-		emailSender.sendVerificationEmail(email, username, verificationLink(verificationToken.getToken()));
-		return new RegisterResponse(saved.getId(), saved.getUsername(), saved.getEmail(), "PENDING_EMAIL_VERIFICATION");
+		String link = verificationLink(verificationToken.getToken());
+		String emailDeliveryStatus = "SENT";
+		try {
+			emailSender.sendVerificationEmail(email, username, link);
+		} catch (RuntimeException ex) {
+			emailDeliveryStatus = "FAILED";
+			LOGGER.warn("Verification email delivery failed for {}", email, ex);
+		}
+		return new RegisterResponse(
+				saved.getId(),
+				saved.getUsername(),
+				saved.getEmail(),
+				"PENDING_EMAIL_VERIFICATION",
+				link,
+				emailDeliveryStatus);
 	}
 
 	@Transactional

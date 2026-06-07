@@ -38,7 +38,7 @@ public class OpenApiController {
 								"responses", okResponse("#/components/schemas/TrackingResponse"))),
 						"/api/auth/register", Map.of("post", operation(
 								"Register user",
-								"Creates an unverified user and sends a Gmail SMTP verification email.",
+								"Creates an unverified user and attempts to send a Gmail SMTP verification email.",
 								"#/components/schemas/RegisterRequest",
 								"#/components/schemas/RegisterResponse")),
 						"/api/auth/verify", Map.of("get", Map.of(
@@ -155,7 +155,9 @@ public class OpenApiController {
 						"userId", numberExample(1),
 						"username", stringExample("john_doe"),
 						"email", stringExample("john@example.com"),
-						"status", stringExample("PENDING_EMAIL_VERIFICATION"))),
+						"status", stringExample("PENDING_EMAIL_VERIFICATION"),
+						"verificationLink", stringExample("https://shipping-bridge-backend.onrender.com/api/auth/verify?token=abc123"),
+						"emailDeliveryStatus", stringExample("SENT"))),
 				"VerifyEmailResponse", object(Map.of(
 						"email", stringExample("john@example.com"),
 						"verified", Map.of("type", "boolean", "example", true),
