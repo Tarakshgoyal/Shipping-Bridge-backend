@@ -173,6 +173,14 @@ class OrderApiIntegrationTest {
 				.andExpect(status().isOk())
 				.andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
 				.andExpect(header().string("Access-Control-Allow-Credentials", "true"));
+
+		mockMvc.perform(options("/api/auth/register")
+						.header("Origin", "https://shipping-bridge-frontend.vercel.app")
+						.header("Access-Control-Request-Method", "POST")
+						.header("Access-Control-Request-Headers", "content-type"))
+				.andExpect(status().isOk())
+				.andExpect(header().string("Access-Control-Allow-Origin", "https://shipping-bridge-frontend.vercel.app"))
+				.andExpect(header().string("Access-Control-Allow-Credentials", "true"));
 	}
 
 	@Test

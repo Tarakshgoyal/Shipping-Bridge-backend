@@ -62,7 +62,10 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://127.0.0.1:5173"));
+		configuration.setAllowedOrigins(List.of(
+				"http://localhost:5173",
+				"http://127.0.0.1:5173",
+				"https://shipping-bridge-frontend.vercel.app"));
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin"));
 		configuration.setExposedHeaders(List.of("WWW-Authenticate"));
