@@ -16,7 +16,13 @@ services:
       - postgres
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://shipping:shipping@postgres:5432/shipping_bridge}
-      LOGISTICS_PROVIDER: mock
+      LOGISTICS_PROVIDER: ${LOGISTICS_PROVIDER:-mock}
+      SHIPROCKET_BASE_URL: ${SHIPROCKET_BASE_URL:-https://apiv2.shiprocket.in/v1/external}
+      SHIPROCKET_EMAIL: ${SHIPROCKET_EMAIL:-}
+      SHIPROCKET_PASSWORD: ${SHIPROCKET_PASSWORD:-}
+      SHIPROCKET_PICKUP_LOCATION: ${SHIPROCKET_PICKUP_LOCATION:-Primary}
+      SHIPROCKET_PICKUP_POSTCODE: ${SHIPROCKET_PICKUP_POSTCODE:-110001}
+      SHIPROCKET_CUSTOMER_EMAIL_FALLBACK: ${SHIPROCKET_CUSTOMER_EMAIL_FALLBACK:-customer@example.com}
       EMAIL_PROVIDER: smtp
       EMAIL_FROM: taraksh9a33@gmail.com
       SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}

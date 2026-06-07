@@ -53,13 +53,19 @@ After the user clicks the verification link, call protected `/api/**` endpoints 
 docker compose up --build
 ```
 
-By default the app uses the deterministic `mock` provider. To call Shiprocket, set:
+By default the app uses the deterministic `mock` provider. To call Shiprocket, create a Shiprocket API User from the Shiprocket API Users screen, then set:
 
 ```bash
 LOGISTICS_PROVIDER=shiprocket
-SHIPROCKET_TOKEN=<token>
 SHIPROCKET_BASE_URL=https://apiv2.shiprocket.in/v1/external
+SHIPROCKET_EMAIL=<shiprocket-api-user-email>
+SHIPROCKET_PASSWORD=<shiprocket-api-user-password>
+SHIPROCKET_PICKUP_LOCATION=Primary
+SHIPROCKET_PICKUP_POSTCODE=110001
+SHIPROCKET_CUSTOMER_EMAIL_FALLBACK=customer@example.com
 ```
+
+`SHIPROCKET_TOKEN` is still supported as an optional override if you want to paste a temporary bearer token manually. Otherwise the app calls Shiprocket's `/auth/login` API, caches the returned token, checks courier serviceability, creates an adhoc order, assigns an AWB, and tracks shipments by AWB.
 
 ## Database
 
@@ -79,6 +85,11 @@ For Render deployments, configure these environment variables on the Render serv
 
 ```bash
 DATABASE_URL=postgresql://...
+LOGISTICS_PROVIDER=shiprocket
+SHIPROCKET_EMAIL=<shiprocket-api-user-email>
+SHIPROCKET_PASSWORD=<shiprocket-api-user-password>
+SHIPROCKET_PICKUP_LOCATION=Primary
+SHIPROCKET_PICKUP_POSTCODE=110001
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=taraksh9a33@gmail.com
